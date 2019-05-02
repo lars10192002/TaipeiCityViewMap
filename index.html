@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 1000px;
+            margin: auto;
+        }
+
+        .content {
+            text-align: center;
+
+            /* border:2px solid red; */
+        }
+
+        header {
+            background-color: #6c5ce7;
+
+        }
+
+        .header p {
+            color: whitesmoke;
+            line-height: 50px;
+            font-size: 30px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        p {
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .box-area {
+            /* margin: auto; */
+            width: 100%;
+            padding: 1.5%;
+            column-count: 3;
+            column-gap: 50px;
+            /* border:2px solid black; */
+        }
+
+        .info-box {
+            width: 310px;
+            height: 500px;
+            border: 1px solid rgb(185, 170, 170);
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            break-inside: avoid;
+            flex-flow: wrap row;
+            justify-content: center;
+            margin-bottom: 20px;
+            /* background-color: #ae0; */
+        }
+
+        .info-box h3,
+        p {
+            /* display: block; */
+            text-align: center;
+
+        }
+
+        img {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .info-box button {
+            margin: auto;
+            background-color: #6c5ce7;
+            color: azure;
+            font-size: 14px;
+            /* font-family: 微軟正黑體; */
+            padding: 8px 40px;
+            margin-top: 20px;
+
+            /* justify-content: center; */
+            /* align-content: center; */
+            /* line-height: 100px; */
+        }
+
+        .content__select { font-family: 微軟正黑體;
+            font-weight: 100;
+            color: #6c5ce7;
+            width: 250px;
+            text-align-last: center;
+            height: 50px;
+            font-size: 24px;
+            border: solid 1px #dbe0df;
+            border-top: none;
+            background-color: rgba(255, 255, 255, 0);
+            margin: 30px;}
+
+        .paging__pages{
+            margin:20px 0px;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            line-height: 40px;
+            color: #6c5ce7;
+        }
+        .paging__pages--active{
+            border-radius: 100%;
+            color: #fff;
+            background-color: #6c5ce7;
+        }
+         @media screen and (max-width: 767px) {
+
+         }
+        
+    </style>
+</head>
+
+<body>
+    <header class="container-header">
+        <div class="header">
+            <p class="header__title">臺北市-觀光景點</p>
+            <p class="header__desc">Javascript & CSS 練習</p>
+        </div>
+    </header>
+    <div class="container">
+
+
+
+        <div class="content">
+            <select class="content__select" id="select-area"></select>
+            <div class="box-area"></div>
+            <div class="paging"></div>
+
+
+        </div>
+
+        <footer class="footer">
+            <p class="copyright">資料來源:政府資料開放平臺</p>
+            <!-- <p class="copyright">Designed by GuaStudio.com 2017</p> -->
+        </footer>
+
+    </div>
+    <script src="js/loaddata.js"></script>
+
+</body>
+
+</html>
