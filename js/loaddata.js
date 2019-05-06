@@ -11,6 +11,8 @@ function getAreaViewData() {
     data.onload = function () {
         if (data.status == 200) {
             viewData = JSON.parse(data.responseText);
+            //console.log("in "+data.responseText);
+
             //缺一段要檢查localstage
             selectArea();
         } else {
@@ -26,7 +28,6 @@ function selectArea(areaName, pageNo) {
     if (!pageNo) {
         pageNo = 1;
         areaName = document.querySelector('.content__select').selectedOptions[0].text;
-        console.log("selectArea : " + areaName);
     }
     setViewData(areaName, pageNo);
 
@@ -40,10 +41,13 @@ function setViewData(areaName, pageNo) {
         currAreaName = areaName;
         currViewData = [];
         for (let i in viewData) {
+
             let dataNo = viewData[i].RowNumber || noDataText;
             let dataAreaName = viewData[i].address.substr(5, 3) || noDataText;
             let dataTitle = viewData[i].stitle || noDataText;
             let dataDesc = viewData[i].xbody || noDataText;
+            let dataLongitude = viewData[i].longitude ||noDataText;
+            let dataLatitude = viewData[i].latitude ||noDataText;
             let dataMRT = viewData[i].MRT || noDataText;
             let dataInfo = viewData[i].info || noDataText;
             let dataOpenTime = viewData[i].MEMO_TIME || noDataText;
@@ -53,16 +57,12 @@ function setViewData(areaName, pageNo) {
             let dataPicDesc;
             if (viewData[i].file.img.length === undefined) {
                 dataPic = viewData[i].file.img['#text'] || '';
-                // let dataPicDesc =viewData[i].file.img[0]['-description']||noDataText;
                 dataPicDesc = viewData[i].file.img['-description'] || noDataText;
-                // console.log("in "+dataPicDesc)
             } else {
                 dataPic = viewData[i].file.img[0]['#text'] || '';
                 dataPicDesc = viewData[i].file.img[0]['-description'] || noDataText;
-                // console.log("out "+dataPicDesc)
 
             }
-            console.log("dataPic " + dataPic + " dataPicDesc " + dataPicDesc + " ;");
 
             if (dataAreaName == currAreaName) {
 
@@ -71,6 +71,8 @@ function setViewData(areaName, pageNo) {
                     'dataAreaName': dataAreaName,
                     'dataTitle': dataTitle,
                     'dataDesc': dataDesc,
+                    'dataLatitude':dataLatitude,
+                    'dataLongitude':dataLongitude,
                     'dataMRT': dataMRT,
                     'dataInfo': dataInfo,
                     'dataOpenTime': dataOpenTime,
@@ -79,7 +81,6 @@ function setViewData(areaName, pageNo) {
                     'dataPic': dataPic,
                     'dataPicDesc': dataPicDesc,
                 });
-                // console.log(currViewData);
             }
             currViewDataCount = currViewData.length;
 
@@ -123,7 +124,7 @@ function createView(pageNo) {
             '<p class="info-box__span"><b>地址:</b>' + currViewData[i].dataAddress + '</p>' +
             '<p class="info-box__span"><b>電話:</b>' + currViewData[i].dataTel + '</p>' +
             //'<span class="info-box__span"><b>時間:</b>' + currViewData[i].dataOpenTime + '</span>' +
-            '<button type="button" class="button button--readMore" data-viewNo="' + currViewData[i].dataNo + '">景點介紹</span>' +
+            '<button type="button" class="button button--readMore" data-viewNo="' + currViewData[i].dataNo + '">景點位置</span>' +
             '</div>' +
             '</div>';
     }
@@ -137,17 +138,55 @@ function setReadMoreButton() {
     for (var i = 0; i < readMoreButton.length; i++) {
         readMoreButton[i].addEventListener('click', function (e) {
             showViewData(e.srcElement.getAttribute('data-viewNo'));
-            alert
+            // alert(e.srcElement.getAttribute('data-viewNo'));
 
         }, false);
     }
+}
+
+function showViewData(viewNo) {
+    // alert(viewNo);
+    for (var i = 0; i < currViewData.length; i++) {
+        if (viewNo == currViewData[i].dataNo) {
+            document.querySelector('.view-title').textContent = currViewData[i].dataTitle;
+            //document.querySelector('.view-img').setAttribute('src', currViewData[i].dataPic);
+            //document.querySelector('.view-img').setAttribute('alt', currViewData[i].dataPicDesc);
+            //document.querySelector('.view-content').innerHTML = replaceAll(currViewData[i].dataDesc, '。', '。<br />');
+            document.querySelector('.view-add').innerHTML = currViewData[i].dataAddress;
+            //document.querySelector('.view-tel').innerHTML = currViewData[i].dataTel;
+            //document.querySelector('.view-time').innerHTML = replaceAll(currViewData[i].dataOpenTime, /\n/g, '<br />');
+            document.querySelector('.view-MRT').textContent = currViewData[i].dataMRT;
+            //document.querySelector('.view-info').innerHTML = replaceAll(currViewData[i].dataInfo, '。', '。<br />');
+
+            initMap(currViewData[i].dataLatitude,currViewData[i].dataLongitude);
+            
+            break;
+        }
+    }
+    document.querySelector('.modal').style.display = 'block';
+}
+function initMap(latitude,longitude) {
+    console.log(latitude+"  "+longitude);
+
+    var uluru = { lat: +latitude, lng: +longitude };
+
+    var map = new google.maps.Map(
+        document.getElementById('map'), { zoom: 14, center: uluru,mapTypeId: 'roadmap' });
+    var marker = new google.maps.Marker({ position: uluru, map: map });
+}
+function listenModalClose() {
+    var closeModalEl = document.querySelector('.modal');
+    closeModalEl.addEventListener('click', function(e) {
+        if (e.target.className == 'modal' || e.target.classList.contains('button--close')) {
+            document.querySelector('.modal').style.display = 'none';
+        }
+    })
 }
 
 
 function createPageBtn(pageNo) {
     let page = '';
     let pageCnt = Math.ceil(currViewDataCount / pageViewQty);
-    console.log("pageCnts " + pageCnt + "= currViewDataCount " + currViewDataCount + " pageViewQty " + pageViewQty);
 
     if (pageCnt > 1) {
         for (let i = 0; i < pageCnt; i++) {
@@ -156,7 +195,6 @@ function createPageBtn(pageNo) {
                 page += '<li class="paging__pages paging__pages--active">' + setNo + '</li>';
             } else {
                 page += '<li class="paging__pages">' + setNo + '</li>';
-                console.log(page);
             }
         }
         document.querySelector('.paging').innerHTML = page;
@@ -207,7 +245,6 @@ function createAreaSelect(areadata) {
         let areaCode = areadata[i].zipcode;
         areaOptions += '<option value = "' + areaCode + '">' + areaName + '</option> ';
     }
-    console.log(areaOptions);
     document.querySelector('.content__select').innerHTML = areaOptions;
 }
 
@@ -218,7 +255,7 @@ function goStart() {
     //偵測行政區選擇框
     listenSelect();
     // //偵測行政區選擇框
-    // listenModalClose();
+    listenModalClose();
 }
 
 function listenSelect() {//set option EventListener
