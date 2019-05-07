@@ -116,7 +116,9 @@ function createView(pageNo) {
         viewBox +=
             '<div class="info-box">' +
             '<div class="info-box__top">' +
-            '<img class="info-box__img" src="' + currViewData[i].dataPic + '" alt="' + currViewData[i].dataPicDesc + '">' +
+            '<div class="info-box__img-wrap">' +
+            '<img class="info-box__img-wrap__img" src="' + currViewData[i].dataPic + '" alt="' + currViewData[i].dataPicDesc + '">' +
+            '</div>' +
             '<h3 class="info-box__view-name">' + currViewData[i].dataTitle + '</h3>' +
             '<p class="info-box__area-name">' + currAreaName + '</p>' +
             '</div>' +
