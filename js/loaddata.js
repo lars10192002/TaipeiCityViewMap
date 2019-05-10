@@ -6,7 +6,7 @@ var pageViewQty = 12; //每頁顯示的景點數量
 let viewData = '';
 function getAreaViewData() {
     let data = new XMLHttpRequest();
-    data.open('get', 'data/viewData.json', true);
+    data.open('get', './data/viewData.json', true);
     data.send(null);
     data.onload = function () {
         if (data.status == 200) {
@@ -217,7 +217,6 @@ function setPageButton() {
             createView(pageNo);
             //建立對應頁碼的分頁按鈕
             createPageBtn(pageNo);
-
         }, false);
     }
 
@@ -226,7 +225,7 @@ function setPageButton() {
 let zipData = '';
 function getAreaCodeData() { //取得行政區資料
     let zip = new XMLHttpRequest();
-    zip.open('get', 'data/viewZip.json', true);
+    zip.open('get', './data/viewZip.json', true);
     zip.send(null);
     zip.onload = function () {
         if (zip.status == 200) {
